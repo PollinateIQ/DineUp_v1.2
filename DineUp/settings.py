@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv  # Added this line
 import dj_database_url 
+from environs import Env
+from dotenv import load_dotenv  # Added this line
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -121,12 +122,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default= 'postgresql://postgres:MXbjQtcbkaWukfhWgDqTHsUnBHFzjnHs@autorack.proxy.rlwy.net:52807/railway'  # Use full connection URL from Railway
-    )
-}
-# Password validation
+
+
+POSTGRES_LOCALLY  = True
+if ENVIRONMENT == 'production': or POSTGRES_LOCALLY == True:
+    DATABASES ['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
+
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
